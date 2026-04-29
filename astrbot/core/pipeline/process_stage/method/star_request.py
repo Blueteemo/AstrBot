@@ -47,6 +47,8 @@ class StarRequestSubStage(Stage):
                 async for ret in wrapper:
                     yield ret
                 event.clear_result()  # 清除上一个 handler 的结果
+                if event.is_stopped():
+                    break
             except Exception as e:
                 traceback_text = traceback.format_exc()
                 logger.error(traceback_text)
