@@ -72,5 +72,3 @@ class StarRequestSubStage(Stage):
                     event.clear_result()
 
                 event.stop_event()
-                if event.is_stopped():
-                    break
