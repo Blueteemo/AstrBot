@@ -266,11 +266,16 @@ class FunctionToolExecutor(BaseFunctionToolExecutor[AstrAgentContext]):
         # "all tools", including runtime computer-use tools.
         if tools is None:
             toolset = ToolSet()
+            # Add registered tools (MCP tools and plugin tools)
             for registered_tool in llm_tools.func_list:
                 if isinstance(registered_tool, HandoffTool):
                     continue
                 if registered_tool.active:
                     toolset.add_tool(registered_tool)
+            # Add builtin tools (e.g. web_search_tavily)
+            for builtin_tool in tool_mgr.iter_builtin_tools():
+                if getattr(builtin_tool, "active", True):
+                    toolset.add_tool(builtin_tool)
             for runtime_tool in runtime_computer_tools.values():
                 toolset.add_tool(runtime_tool)
             return None if toolset.empty() else toolset
